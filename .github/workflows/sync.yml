@@ -15,16 +15,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.ACCESS_TOKEN }}
-
-      # ==============================================================================
-      # ✨ HIER IST DER FINALE FIX ✨
-      # Wir fügen  wieder hinzu, um Submodules
-      # zu verhindern und die Repos als normale Ordner zu behandeln.
-      # ==============================================================================
       - name: Clone sub-repos
         run: |
           git config --global url."https://x-access-token:${{ secrets.ACCESS_TOKEN }}@github.com/".insteadOf "https://github.com/"
-          
           REPOS_TO_SYNC=${{ inputs.repos || 'mannomannX/website-analyzer-dashboard,mannomannX/website-analyzer-api' }}
           for repo in $(echo "$REPOS_TO_SYNC" | sed 's/,/ /g'); do
             folder_name=$(basename $repo)
@@ -32,24 +25,34 @@ jobs:
             rm -rf "$folder_name"
             git clone --depth 1 https://github.com/$repo.git "$folder_name" && rm -rf "$folder_name/.git"
           done
-
-      - name: Create README and commit
+      - name: Create intelligent README
         run: |
-          echo "# Fusion-Repo" > README.md
+          sudo apt-get update >/dev/null && sudo apt-get install -y tree >/dev/null
+          echo "# 🤖 MonoMono Fusions-Repo" > README.md
           echo "" >> README.md
-          echo "This repository is an automatic fusion of the following projects:" >> README.md
+          echo "Dieses Repository ist eine automatisch generierte Zusammenführung, erstellt von MonoMono." >> README.md
+          echo "" >> README.md
+          echo "## 🗺️ Projekt-Map" >> README.md
+          echo "" >> README.md
+          echo "### 🧩 Projekt-Komponenten" >> README.md
           for repo in $(echo "${{ inputs.repos || 'mannomannX/website-analyzer-dashboard,mannomannX/website-analyzer-api' }}" | sed 's/,/ /g'); do
-            echo "- [$repo](https://github.com/$repo)" >> README.md
+            echo "- **[$(basename $repo)](./$(basename $repo))** (Original: [$repo](https://github.com/$repo))" >> README.md
           done
           echo "" >> README.md
-          echo "Last update: $(date)" >> README.md
-          
+          echo "### 🌳 Verzeichnisstruktur" >> README.md
+          echo "```" >> README.md
+          tree -L 2 -I 'README.md' >> README.md
+          echo "```" >> README.md
+          echo "" >> README.md
+          echo "> Letzte Aktualisierung: $(date)" >> README.md
+      - name: Commit and push changes
+        run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git add .
           if ! git diff-index --quiet HEAD; then
-            git commit -m "Fusion-Repo: Sync sub-repos"
+            git commit -m "feat(workflow): Upgrade MonoMono sync logic"
             git push
           else
-            echo "No new changes found in sub-repos."
+            echo "No changes to workflow found."
           fi
