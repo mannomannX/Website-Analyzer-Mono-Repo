@@ -1,10 +1,6 @@
 name: 'Fusion-Repo Erstellen & Aktualisieren'
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '0 */1 * * *'
-  repository_dispatch:
-    types: [monomono-sync-event]
 jobs:
   sync-repos:
     runs-on: ubuntu-latest
@@ -18,7 +14,7 @@ jobs:
       - name: Clone sub-repos
         run: |
           git config --global url."https://x-access-token:${{ secrets.ACCESS_TOKEN }}@github.com/".insteadOf "https://github.com/"
-          REPOS_TO_SYNC=${{ inputs.repos || 'mannomannX/website-analyzer-dashboard,mannomannX/website-analyzer-api' }}
+          REPOS_TO_SYNC=${{ inputs.repos || 'mannomannX/website-analyzer-api,mannomannX/website-analyzer-dashboard' }}
           for repo in $(echo "$REPOS_TO_SYNC" | sed 's/,/ /g'); do
             folder_name=$(basename $repo)
             echo "-> Cloning $repo into $folder_name..."
@@ -30,12 +26,11 @@ jobs:
           sudo apt-get update >/dev/null && sudo apt-get install -y tree >/dev/null
           echo "# 🤖 MonoMono Fusions-Repo" > README.md
           echo "" >> README.md
-          echo "Dieses Repository ist eine automatisch generierte Zusammenführung, erstellt von MonoMono." >> README.md
+          echo "Dieses Repository ist eine automatisch generierte Zusammenführung." >> README.md
           echo "" >> README.md
           echo "## 🗺️ Projekt-Map" >> README.md
-          echo "" >> README.md
           echo "### 🧩 Projekt-Komponenten" >> README.md
-          for repo in $(echo "${{ inputs.repos || 'mannomannX/website-analyzer-dashboard,mannomannX/website-analyzer-api' }}" | sed 's/,/ /g'); do
+          for repo in $(echo "${{ inputs.repos || 'mannomannX/website-analyzer-api,mannomannX/website-analyzer-dashboard' }}" | sed 's/,/ /g'); do
             echo "- **[$(basename $repo)](./$(basename $repo))** (Original: [$repo](https://github.com/$repo))" >> README.md
           done
           echo "" >> README.md
@@ -51,7 +46,7 @@ jobs:
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git add .
           if ! git diff-index --quiet HEAD; then
-            git commit -m "feat(workflow): Upgrade MonoMono sync logic"
+            git commit -m "feat(workflow): Repair and upgrade MonoMono sync logic"
             git push
           else
             echo "No changes to workflow found."
