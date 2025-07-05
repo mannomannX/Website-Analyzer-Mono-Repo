@@ -1,0 +1,21 @@
+# MonoMono Trigger Workflow
+name: MonoMono Sync Trigger
+on:
+  push:
+    branches: [main, master]
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send dispatch to fusion repo
+        env:
+          FUSION_REPO: ${{ secrets.MONOMONO_FUSION_REPO }}
+          GH_TOKEN: ${{ secrets.MONOMONO_PAT }}
+        run: |
+          if [ -z "$FUSION_REPO" ]; then
+            echo "Fehler: Secret MONOMONO_FUSION_REPO ist nicht gesetzt."
+            exit 1
+          fi
+          
+          echo "Sending dispatch to $FUSION_REPO"
+          gh api --method POST "repos/$FUSION_REPO/dispatches" -f "event_type=monomono-sync-event"

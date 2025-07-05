@@ -1,0 +1,160 @@
+/* src/index.css */
+
+/* 1. FONT IMPORT & FOUNDATIONS */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  /* Color Tokens from Design System */
+  --background-primary: #111827;
+  --background-secondary: #1f2937;
+  --background-interactive: #374151;
+  --border-primary: #374151;
+  --border-interactive: #4f5a6b;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-disabled: #4b5563;
+  --brand-primary: #4a3f78;
+  --brand-secondary: #8A7BFF;
+  --accent-main: #FF6347; /* Tomato Orange */
+  --feedback-success: #34d399;
+  --feedback-danger: #ef4444;
+
+  /* Typography */
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  
+  /* Spacing */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  
+  /* Borders & Shadows */
+  --border-radius-md: 8px;
+  --border-radius-sm: 6px;
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-family);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--background-primary);
+  color: var(--text-primary);
+}
+
+
+/* 2. LOGIN PAGE SPECIFIC STYLES */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: var(--space-4);
+}
+
+.login-card {
+  width: 100%;
+  max-width: 400px;
+  background-color: var(--background-secondary);
+  padding: var(--space-8);
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--border-primary);
+  box-shadow: var(--shadow-md);
+  text-align: center;
+}
+
+.login-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--space-2);
+}
+
+.login-subtitle {
+    font-size: 16px;
+    color: var(--text-secondary);
+    margin-top: 0;
+    margin-bottom: var(--space-8);
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.input-group {
+    margin-bottom: var(--space-4);
+}
+
+.input-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: var(--space-2);
+}
+
+.input-group input {
+    width: 100%;
+    padding: var(--space-3) var(--space-4);
+    background-color: var(--background-primary);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--border-radius-sm);
+    color: var(--text-primary);
+    font-size: 16px;
+    box-sizing: border-box; /* Ensures padding doesn't affect width */
+    transition: border-color 0.2s;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: var(--brand-secondary);
+    box-shadow: 0 0 0 2px rgba(138, 123, 255, 0.2);
+}
+
+.login-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: var(--space-3) var(--space-4);
+    background-color: var(--accent-main);
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    margin-top: var(--space-4);
+    transition: background-color 0.2s;
+}
+
+.login-button:hover {
+    background-color: #ff482a; /* Slightly darker orange */
+}
+
+.login-button:disabled {
+    background-color: var(--background-interactive);
+    cursor: not-allowed;
+}
+
+.error-message {
+    color: var(--feedback-danger);
+    background-color: rgba(239, 68, 68, 0.1);
+    border: 1px solid var(--feedback-danger);
+    padding: var(--space-3);
+    border-radius: var(--border-radius-sm);
+    font-size: 14px;
+    text-align: center;
+    margin-bottom: var(--space-4);
+}
+
+.success-message {
+    color: var(--feedback-success);
+    font-size: 14px;
+    text-align: center;
+    margin-bottom: var(--space-4);
+}

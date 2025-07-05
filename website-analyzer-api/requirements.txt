@@ -1,0 +1,27 @@
+# requirements.txt
+
+# --- Core API Framework ---
+fastapi
+uvicorn[standard]
+python-multipart
+
+# --- Asynchronous Tasks (Background Jobs) ---
+celery
+redis
+
+# --- Database (MongoDB) ---
+beanie
+motor
+
+# --- Utilities ---
+pydantic
+pydantic-settings
+passlib[bcrypt]
+python-jose[cryptography]
+email-validator
+bcrypt==3.2.2 # NEU: Fügt eine feste, kompatible Version hinzu
+
+# --- Website Analysis (Ihr bisheriger Code) ---
+requests
+beautifulsoup4
+google-generativeai

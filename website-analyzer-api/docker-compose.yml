@@ -1,0 +1,51 @@
+# docker-compose.yml
+
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    volumes:
+      - ./app:/app
+      - ./scripts:/scripts  # NEU: Spiegelt den scripts-Ordner
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - mongo
+
+  # 2. Der Celery-Worker, der im Hintergrund die Analysen durchführt
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.worker
+    command: celery -A app.worker.celery_app worker --loglevel=info
+    volumes:
+      - ./app:/app
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - mongo
+
+  # 3. Die MongoDB-Datenbank zum Speichern von Nutzern und Ergebnissen
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    env_file:
+      - .env
+
+  # 4. Der Redis-Server als "Postamt" (Message Broker) für Celery
+  redis:
+    image: redis:alpine
+
+volumes:
+  mongo-data:
