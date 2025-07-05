@@ -1,1 +1,56 @@
-
+name: 'Fusion-Repo Erstellen & Aktualisieren'
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 */1 * * *'
+jobs:
+  sync-repos:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout fusion repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.ACCESS_TOKEN }}
+      - name: Clone sub-repos
+        run: |
+          git config --global url."https://x-access-token:${{ secrets.ACCESS_TOKEN }}@github.com/".insteadOf "https://github.com/"
+          REPOS_TO_SYNC=${{ inputs.repos || 'mannomannX/website-analyzer-dashboard,mannomannX/website-analyzer-api' }}
+          for repo in $(echo "$REPOS_TO_SYNC" | sed 's/,/ /g'); do
+            folder_name=$(basename $repo)
+            echo "-> Cloning $repo into $folder_name..."
+            rm -rf "$folder_name"
+            git clone --depth 1 https://github.com/$repo.git "$folder_name" && rm -rf "$folder_name/.git"
+          done
+      - name: Create intelligent README
+        run: |
+          sudo apt-get update >/dev/null && sudo apt-get install -y tree >/dev/null
+          echo "# 🤖 MonoMono Fusions-Repo" > README.md
+          echo "" >> README.md
+          echo "Dieses Repository ist eine automatisch generierte Zusammenführung, erstellt von MonoMono." >> README.md
+          echo "" >> README.md
+          echo "## 🗺️ Projekt-Map" >> README.md
+          echo "" >> README.md
+          echo "### 🧩 Projekt-Komponenten" >> README.md
+          for repo in $(echo "${{ inputs.repos || 'mannomannX/website-analyzer-dashboard,mannomannX/website-analyzer-api' }}" | sed 's/,/ /g'); do
+            echo "- **[$(basename $repo)](./$(basename $repo))** (Original: [$repo](https://github.com/$repo))" >> README.md
+          done
+          echo "" >> README.md
+          echo "### 🌳 Verzeichnisstruktur" >> README.md
+          echo "```" >> README.md
+          tree -L 2 -I 'README.md' >> README.md
+          echo "```" >> README.md
+          echo "" >> README.md
+          echo "> Letzte Aktualisierung: $(date)" >> README.md
+      - name: Commit and push changes
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add .
+          if ! git diff-index --quiet HEAD; then
+            git commit -m "feat(workflow): Upgrade MonoMono sync logic"
+            git push
+          else
+            echo "No changes to workflow found."
+          fi
