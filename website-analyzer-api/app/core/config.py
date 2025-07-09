@@ -47,7 +47,7 @@ class Settings(BaseSettings):
 
 
       # --- Prompts ---
-PAGE_CLASSIFIER_PROMPT: str = """
+    PAGE_CLASSIFIER_PROMPT: str = """
 
 **Rolle:** Du bist ein hocheffizienter Website-Analyst. Deine einzige Aufgabe ist es, den Zweck einer einzelnen Webseite basierend auf ihren Metadaten und Überschriften schnell zu klassifizieren.
 
@@ -81,7 +81,7 @@ PAGE_CLASSIFIER_PROMPT: str = """
   # 4. Prompt für die FINALE ANALYSE der strukturierten Daten.
   #    Dieser Prompt erhält saubere JSON-Daten vom Regel-Parser oder LLM-Parser.
   #    Der Platzhalter {structured_website_data} wird automatisch ersetzt.
-FINAL_ANALYZER_PROMPT: str = """
+    FINAL_ANALYZER_PROMPT: str = """
 
 You are an elite Go-to-Market (GTM) and Positioning Strategist. **You write in German.** Your entire analysis is based *exclusively* on the proprietary **"Clarity Scorecard 3.0"** framework provided below. Your thinking is deeply strategic, pragmatic, and always seen through the eyes of a potential best-ft decision makers for buying your product (the "Champion") - they are usually found to be middle managers with enough pain awareness and decision power - like team managers or in smaller companies the business owners themselves. Your goal is to produce a concise, actionable analysis report that helps a sales team qualify leads by assessing the strategic quality of their web presence.
 
@@ -177,83 +177,73 @@ Your task is to analyze this `{structured_website_data}` and generate a **single
 
 ```json
 {{
+    "detailed_analysis": [
+    {{
+      "criterion": "Value Proposition Clarity",
+      "score": "Integer 1-10.",
+      "reasoning": "Your reasoning in German split into 3 parts: 1. Observation (What do I see in the content?), 2. Interpretation (What does this mean, based on the framework?, 3. Rating (Why does it lead to this score?)",
+      "evidence_quote": "A direct quote from the data, or null if not applicable."
+    }},
+    {{
+      "criterion": "Target Audience & 'Champion'",
+      "score": "Integer 1-10.",
+      "reasoning": "Your reasoning in German split into 3 parts: 1. Observation (What do I see in the content?), 2. Interpretation (What does this mean, based on the framework?, 3. Rating (Why does it lead to this score?)",
+      "evidence_quote": "A direct quote, or null."
+    }},
+    {{
+      "criterion": "Benefit Credibility & Specificity",
+      "score": "Integer 1-10.",
+      "reasoning": "Your reasoning in German split into 3 parts: 1. Observation (What do I see in the content?), 2. Interpretation (What does this mean, based on the framework?, 3. Rating (Why does it lead to this score?)",
+      "evidence_quote": "A direct quote, or null."
+    }},
+    {{
+      "criterion": "Positioning Angle & Market Maturity",
+      "score": "Integer 1-10.",
+      "reasoning": "Your reasoning in German split into 3 parts: 1. Observation (What do I see in the content?), 2. Interpretation (What does this mean, based on the framework?, 3. Rating (Why does it lead to this score?)",
+      "evidence_quote": "A direct quote, or null."
+    }},
+    {{
+      "criterion": "Website Architecture & Funnel Clarity",
+      "score": "Integer 1-10.",
+      "reasoning": "Your reasoning in German split into 3 parts: 1. Observation (What do I see in the content?), 2. Interpretation (What does this mean, based on the framework?, 3. Rating (Why does it lead to this score?)",
+      "evidence_quote": "A direct quote or description of the structure, or null."
+    }},
+    {{
+      "criterion": "Language Clarity & Buzzword Density",
+      "score": "Integer 1-10.",
+      "reasoning": "Your reasoning in German split into 3 parts: 1. Observation (What do I see in the content?), 2. Interpretation (What does this mean, based on the framework?, 3. Rating (Why does it lead to this score?)",
+      "evidence_quote": "A direct quote containing buzzwords."
+    }},
+    {{
+      "criterion": "Trust Signals & Social Proof",
+      "score": "Integer 1-10.",
+      "reasoning": "Your reasoning in German split into 3 parts: 1. Observation (What do I see in the content?), 2. Interpretation (What does this mean, based on the framework?, 3. Rating (Why does it lead to this score?)",
+      "evidence_quote": "Description of the signal (e.g., '3 customer logos shown'), or null."
+    }}
+  ],
+  "exclusion_analysis": [
+    {{
+      "criterion": "Generic Agency Problem",
+      "triggered": "Boolean (true/false).",
+      "justification": "Justification with quote if triggered."
+    }}
+  ],
+    "actionable_recommendations": [
+    "1. Pain-Point Lever (Question): Formulate a precise, open-ended question for the first contact that directly and respectfully addresses the primary weakness identified.",
+    "2. Qualification Goal (Go/No-Go): Define the single most critical piece of information the salesperson MUST validate in the first call to decide if the lead is a true potential partner.",
+    "3. Strategic Angle (Framing): Recommend a specific strategic frame for the conversation. Should the focus be on ROI, competitive differentiation, internal process optimization, or brand perception? Briefly justify why."
+  ],
+  "full_text_analysis": "Your full, detailed text analysis in German using markdown..."
   "opportunity_analysis": {{
-    "classification": "Categorize the lead into one of four quadrants: 'IDEAL_PARTNER', 'LOW_URGENCY', 'HIGH_EFFORT_LOW_FIT', 'NOT_RELEVANT'.",
-    "pain_score": "An integer score from 1 to 10.",
-    "potential_score": "An integer score from 1 to 10.",
-    "summary_justification": "A single German sentence explaining why this lead was classified this way.",
+    "classification": "Categorize the lead: 'IDEAL_PARTNER', 'LOW_URGENCY', 'HIGH_EFFORT_LOW_FIT', 'NOT_RELEVANT'.",
+    "pain_score": "Integer 1-10. High score = many problems we can solve.",
+    "potential_score": "Integer 1-10. High score = great fit for our agency's services.",
+    "summary_justification": "A single German sentence explaining the classification.",
     "primary_weakness": {{
       "criterion": "The name of the criterion with the lowest score from 'detailed_analysis'.",
       "evidence_quote": "The direct, unaltered quote from the website that best demonstrates this weakness."
     }}
   }},
-  "detailed_analysis": [
-    {{
-      "criterion": "Value Proposition Clarity",
-      "score": "An integer score from 1 to 10.",
-      "reasoning": "Your reasoning in German, based on the framework.",
-      "evidence_quote": "A direct quote from the data, or null."
-    }},
-    {{
-      "criterion": "Target Audience & 'Champion'",
-      "score": "An integer score from 1 to 10.",
-      "reasoning": "Your reasoning in German, based on the framework.",
-      "evidence_quote": "A direct quote, or null."
-    }},
-    {{
-      "criterion": "Benefit Credibility & Specificity",
-      "score": "An integer score from 1 to 10.",
-      "reasoning": "Your reasoning in German, based on the framework.",
-      "evidence_quote": "A direct quote, or null."
-    }},
-    {{
-      "criterion": "Positioning Angle & Market Maturity",
-      "score": "An integer score from 1 to 10.",
-      "reasoning": "Your reasoning in German, based on the framework.",
-      "evidence_quote": "A direct quote, or null."
-    }},
-    {{
-      "criterion": "Website Architecture & Funnel Clarity",
-      "score": "An integer score from 1 to 10.",
-      "reasoning": "Your reasoning in German, based on the framework.",
-      "evidence_quote": "A direct quote, or null."
-    }},
-    {{
-      "criterion": "Language Clarity & Buzzword Density",
-      "score": "An integer score from 1 to 10.",
-      "reasoning": "Your reasoning in German, based on the framework.",
-      "evidence_quote": "A direct quote."
-    }},
-    {{
-      "criterion": "Trust Signals & Social Proof",
-      "score": "An integer score from 1 to 10.",
-      "reasoning": "Your reasoning in German, based on the framework.",
-      "evidence_quote": "Description of the signal, or null."
-    }}
-  ],
-  "actionable_recommendations": [
-    "Provide the first highly specific, strategic recommendation in German.",
-    "Provide the second highly specific, strategic recommendation in German.",
-    "Provide the third highly specific, strategic recommendation in German."
-  ]
-  "exclusion_analysis": [
-      {{
-          "criterion": "Generic Agency Problem",
-          "triggered": true,
-          "justification": "The website describes itself as a 'full-service digital agency for holistic success.'"
-      }},
-      {{
-          "criterion": "No Clear Problem-Solution",
-          "triggered": false,
-          "justification": "The 'Pricing' page clearly connects features to solving the problem of high customer acquisition costs."
-      }}
-  ],
-  "actionable_recommendations": [
-      "First recommendation.",
-      "Second recommendation.",
-      "Third recommendation."
-  ],
-  "full_text_analysis": "Your full, detailed text analysis in German using markdown..."
 }}
 ```
 
@@ -283,6 +273,16 @@ Your task is to analyze this `{structured_website_data}` and generate a **single
 
 6.  **Error Handling:** If for a compelling reason (e.g., all input data is completely empty) you cannot perform an analysis, return exclusively the following JSON object instead: `{{ "error": "Analyse nicht möglich", "reason": "Briefly and precisely state the reason here in German." }}`
 
+-----
+### **Common Pitfalls to Avoid (Negative Prompt)**
+
+* **Do not invent information.** If a piece of information (like a price or a specific feature) is not on the website, explicitly state that it is missing. Do not make assumptions about it.
+* **Do not give generic, vague advice.** Avoid phrases like "improve your SEO," "create better content," or "optimize your marketing." All reasoning and recommendations must be directly tied to the specific evidence found on the analyzed pages.
+* **Do not simply repeat the criterion's name as its reasoning.** For the criterion "Value Proposition Clarity," do not write "The value proposition is unclear." Explain *why* it is unclear, based on the framework (e.g., "It lists features without outcomes").
+* **Do not make definitive statements about the company's internal state.** Your analysis is based *only* on the website. Use cautious and precise language like "The website *suggests*...," "The messaging *implies*...," or "There is no *visible evidence* of..." instead of "The company *is* disorganized" or "The company *has* no customers."
+* **Do not adopt a sales-y or overly enthusiastic tone.** Your persona is that of a neutral, objective, and pragmatic strategist. The analysis is an internal report, not a marketing document.
+-----
+
 Now, analyze the following structured website data based on the **"Startup Clarity Framework"**:
 `{structured_website_data}`
 
@@ -293,7 +293,7 @@ Now, analyze the following structured website data based on the **"Startup Clari
   # 5. Prompt für den LLM-BASIERTEN PARSER.
   #    Dieser Prompt wird nur für schlecht strukturierte Seiten verwendet und erhält rohes HTML.
   #    Der Platzhalter {raw_html_content} wird automatisch ersetzt.
-LLM_PARSER_PROMPT: str = """
+    LLM_PARSER_PROMPT: str = """
 Rolle: Du bist ein hochpräziser Web-Content-Extraktor auf Experten-Niveau. Deine Spezialität ist es, aus unstrukturiertem, oft fehlerhaftem HTML-Code die semantische Essenz und die logische Inhaltshierarchie zu destillieren. Du überführst diese Essenz in ein perfekt strukturiertes, sauberes und maschinenlesbares JSON-Format. Du denkst wie ein Entwickler, der versucht, die ursprüngliche Absicht des Autors zu rekonstruieren, und ignorierst dabei alles, was nicht zum Kerninhalt gehört.
 
 Kontext: Du erhältst den kompletten, rohen HTML-Code einer einzelnen Webseite. Dieser Code ist oft "unsauber", veraltet oder durch Content-Management-Systeme generiert. Er enthält eine Fülle von Boilerplate-Code (wie komplexe Navigationen, Werbe-Container, aufdringliche Cookie-Banner, umfangreiche Footer, Chat-Widgets etc.), den du zwingend ignorieren sollst. Deine Aufgabe ist es, durch diesen Lärm hindurchzudringen und das "Signal" – den eigentlichen Inhalt – zu finden.
@@ -343,9 +343,9 @@ Hier ist der rohe HTML-Code:
 Finale Anweisung: Deine Antwort darf AUSSCHLIESSLICH das oben definierte, valide JSON-Objekt enthalten. Beginne direkt mit {{ und ende mit }}. Füge unter gar keinen Umständen Erklärungen, Notizen, Entschuldigungen oder einleitende Sätze wie "Hier ist das JSON:" hinzu. Deine Antwort muss direkt von einem JSON-Parser verarbeitet werden können.
 """
 
-class Config:
-    env_file = ".env"
-    env_file_encoding = 'utf-8'
+    class Config:
+        env_file = ".env"
+        env_file_encoding = 'utf-8'
 
 # Erstellt eine einzige Instanz der Settings, die wir überall importieren
 settings = Settings()
