@@ -10,7 +10,7 @@ Last update: Sat Jul  5 15:00:31 UTC 2025
 # Project-Tree
 
 
-'''
+```
 Website-Analyzer-Mono-Repo/
 ├── .github/
 │   └── workflows/
@@ -79,4 +79,4 @@ Website-Analyzer-Mono-Repo/
         │   └── pages/
         │       └── LoginPage.jsx # Login-Seite
         └── vite.config.js       # Vite-Konfigurationsdatei
-'''
+```
