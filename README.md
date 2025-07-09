@@ -9,106 +9,74 @@ Last update: Sat Jul  5 15:00:31 UTC 2025
 
 # Project-Tree
 
+
+'''
+Website-Analyzer-Mono-Repo/
 ├── .github/
 │   └── workflows/
-│       └── sync.yml
-├── README.md
-├── website-analyzer-api/
+│       └── sync.yml             # GitHub Actions Workflow zur Synchronisierung
+├── README.md                    # Diese Datei
+├── website-analyzer-api/        # Backend-Dienst (FastAPI)
 │   ├── .github/
 │   │   └── workflows/
-│   │       └── monomono-trigger.yml
-│   ├── .gitignore
-│   ├── app/
-│   │   ├── init.py
-│   │   ├── pycache/
-│   │   │   ├── init.cpython-311.pyc
-│   │   │   └── main.cpython-311.pyc
-│   │   ├── api/
-│   │   │   ├── init.py
-│   │   │   ├── pycache/
-│   │   │   │   ├── init.cpython-311.pyc
-│   │   │   │   └── dependencies.cpython-311.pyc
-│   │   │   ├── dependencies.py
-│   │   │   └── routes/
-│   │   │       ├── pycache/
-│   │   │       │   ├── analysis.cpython-311.pyc
-│   │   │       │   └── auth.cpython-311.pyc
-│   │   │       ├── admin.py
-│   │   │       ├── analysis.py
-│   │   │       └── auth.py
-│   │   ├── core/
-│   │   │   ├── init.py
-│   │   │   ├── pycache/
-│   │   │   │   ├── init.cpython-311.pyc
-│   │   │   │   ├── analyzer.cpython-311.pyc
-│   │   │   │   ├── confidence_scorer.cpython-311.pyc
-│   │   │   │   ├── config.cpython-311.pyc
-│   │   │   │   ├── crawler.cpython-311.pyc
-│   │   │   │   ├── page_classifier.cpython-311.pyc
-│   │   │   │   ├── parser.cpython-311.pyc
-│   │   │   │   └── security.cpython-311.pyc
-│   │   │   ├── analyzer.py
-│   │   │   ├── confidence_scorer.py
-│   │   │   ├── config.py
-│   │   │   ├── crawler.py
-│   │   │   ├── page_classifier.py
-│   │   │   ├── parser.py
-│   │   │   └── security.py
-│   │   ├── db/
-│   │   │   ├── init.py
-│   │   │   ├── pycache/
-│   │   │   │   ├── init.cpython-311.pyc
-│   │   │   │   ├── database.cpython-311.pyc
-│   │   │   │   └── models.cpython-311.pyc
-│   │   │   ├── database.py
-│   │   │   └── models.py
-│   │   ├── main.py
-│   │   ├── schemas/
-│   │   │   ├── init.py
-│   │   │   ├── pycache/
-│   │   │   │   ├── init.cpython-311.pyc
-│   │   │   │   ├── analysis.cpython-311.pyc
-│   │   │   │   └── token.cpython-311.pyc
-│   │   │   ├── analysis.py
-│   │   │   ├── token.py
-│   │   │   └── user.py
-│   │   └── worker/
-│   │       ├── init.py
-│   │       ├── pycache/
-│   │       │   ├── init.cpython-311.pyc
-│   │       │   ├── celery_app.cpython-311.pyc
-│   │       │   └── tasks.cpython-311.pyc
-│   │       ├── celery_app.py
-│   │       └── tasks.py
-│   ├── docker-compose.yml
-│   ├── Dockerfile
-│   ├── Dockerfile.worker
-│   ├── README.md
-│   ├── requirements.txt
+│   │       └── monomono-trigger.yml # Workflow für das API-Subprojekt
+│   ├── .gitignore               # Git-Ignore-Regeln für das API-Backend
+│   ├── app/                     # Hauptanwendungslogik
+│   │   ├── api/                 # API-Endpunkte und Abhängigkeiten
+│   │   │   ├── dependencies.py  # Abhängigkeiten für API-Routen
+│   │   │   └── routes/          # Definition der API-Routen
+│   │   │       ├── admin.py     # Admin-spezifische Routen
+│   │   │       ├── analysis.py  # Routen für die Analyse
+│   │   │       └── auth.py      # Authentifizierungs-Routen
+│   │   ├── core/                # Kernlogik und Geschäftsregeln
+│   │   │   ├── analyzer.py      # Website-Analyse-Logik
+│   │   │   ├── confidence_scorer.py # Logik zur Vertrauensbewertung
+│   │   │   ├── config.py        # Anwendungskonfiguration
+│   │   │   ├── crawler.py       # Web-Crawler-Logik
+│   │   │   ├── page_classifier.py # Klassifizierung von Webseiten
+│   │   │   ├── parser.py        # HTML-Parsing-Logik
+│   │   │   └── security.py      # Sicherheitsfunktionen (z.B. JWT)
+│   │   ├── db/                  # Datenbank-Modelle und -Verbindungen
+│   │   │   ├── database.py      # Datenbankverbindung und -Sitzungen
+│   │   │   └── models.py        # SQLAlchemy-Modelle
+│   │   ├── main.py              # Haupt-FastAPI-Anwendung
+│   │   ├── schemas/             # Pydantic-Schemas für Datenvalidierung
+│   │   │   ├── analysis.py      # Schemas für Analysedaten
+│   │   │   ├── token.py         # Schemas für Token (JWT)
+│   │   │   └── user.py          # Schemas für Benutzerdaten
+│   │   └── worker/              # Celery Worker für Hintergrundaufgaben
+│   │       ├── celery_app.py    # Celery-Anwendungskonfiguration
+│   │       └── tasks.py         # Definition der Celery-Aufgaben
+│   ├── docker-compose.yml       # Docker Compose für Entwicklung/Deployment
+│   ├── Dockerfile               # Dockerfile für die FastAPI-Anwendung
+│   ├── Dockerfile.worker        # Dockerfile für den Celery Worker
+│   ├── README.md                # Spezifische README für das API-Backend
+│   ├── requirements.txt         # Python-Abhängigkeiten
 │   └── scripts/
-│       └── create_admin_user.py
-└── website-analyzer-dashboard/
-├── .github/
-│   └── workflows/
-│       └── monomono-trigger.yml
-└── website-analyzer-dashboard/
-├── .gitignore
-├── eslint.config.js
-├── index.html
-├── package-lock.json
-├── package.json
-├── public/
-│   └── vite.svg
-├── README.md
-├── src/
-│   ├── api/
-│   │   └── apiClient.js
-│   ├── App.css
-│   ├── App.jsx
-│   ├── assets/
-│   │   └── react.svg
-│   ├── index.css
-│   ├── main.jsx
-│   └── pages/
-│       └── LoginPage.jsx
-└── vite.config.js
+│       └── create_admin_user.py # Skript zur Erstellung eines Admin-Benutzers
+└── website-analyzer-dashboard/  # Frontend-Anwendung (React)
+    ├── .github/
+    │   └── workflows/
+    │       └── monomono-trigger.yml # Workflow für das Dashboard-Subprojekt
+    └── website-analyzer-dashboard/  # Tatsächliches Dashboard-Verzeichnis
+        ├── .gitignore           # Git-Ignore-Regeln für das Dashboard
+        ├── eslint.config.js     # ESLint-Konfiguration
+        ├── index.html           # Haupt-HTML-Datei
+        ├── package-lock.json    # Lock-Datei für npm-Pakete
+        ├── package.json         # Projektinformationen und Abhängigkeiten (npm)
+        ├── public/
+        │   └── vite.svg         # Vite-Logo
+        ├── README.md            # Spezifische README für das Dashboard
+        ├── src/                 # Quellcode des React-Dashboards
+        │   ├── api/
+        │   │   └── apiClient.js # API-Client für die Kommunikation mit dem Backend
+        │   ├── App.css          # Globale CSS-Datei
+        │   ├── App.jsx          # Haupt-React-Komponente
+        │   ├── assets/
+        │   │   └── react.svg    # React-Logo
+        │   ├── index.css        # Index-CSS-Datei
+        │   ├── main.jsx         # Einstiegspunkt der React-Anwendung
+        │   └── pages/
+        │       └── LoginPage.jsx # Login-Seite
+        └── vite.config.js       # Vite-Konfigurationsdatei
+'''
