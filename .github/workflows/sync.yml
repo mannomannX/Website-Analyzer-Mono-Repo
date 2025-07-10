@@ -1,4 +1,3 @@
-# ... (Hier die komplette, lange Vorlage für SYNC_WORKFLOW_TEMPLATE einfügen)
 name: 'Fusion-Repo Sync'
 on:
   workflow_dispatch:
@@ -23,17 +22,15 @@ jobs:
             is_in_sync_list=false
             for repo_in_list in $(echo "$REPOS_TO_SYNC" | sed "s/,/ /g"); do
               if [ "$(basename "$repo_in_list")" == "$dir" ]; then
-                is_in_sync_list=true
-                break
+                is_in_sync_list=true; break;
               fi
             done
             if [ "$is_in_sync_list" == "false" ]; then
-              echo "   - Deleting obsolete directory: $dir"
-              rm -rf "$dir"
+              echo "   - Deleting obsolete directory: $dir"; rm -rf "$dir";
             fi
           done
           echo "-> Cloning sub-repos..."
-          for repo in $(echo "$REPOS_TO_SYNC" | sed 's/,/ /g'); do
+          for repo in $(echo "$REPOS_TO_SYNC" | sed "s/,/ /g"); do
             folder_name=$(basename $repo)
             rm -rf "$folder_name"
             git clone --depth 1 "https://x-access-token:${{ secrets.ACCESS_TOKEN }}@github.com/$repo.git" "$folder_name" --quiet && rm -rf "$folder_name/.git"
