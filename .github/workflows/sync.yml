@@ -13,25 +13,66 @@ jobs:
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.ACCESS_TOKEN }}
+
       - name: Sync and Rebuild
         run: |
-          REPOS_TO_SYNC='mannomannX/website-analyzer-dashboard,mannomannX/website-analyzer-api'
+          # == CONFIGURATION ==
+          # Der Platzhalter wird vom Skript mit der korrekten Liste ersetzt
+          REPOS_TO_SYNC='mannomannX/website-analyzer-dashboard,mannomannX/website-analyzer-api' 
+
+          # == STEP 1: CLEANUP GHOST DIRECTORIES (mit Schutz für .github) ==
           echo "-> Pruning obsolete directories..."
-          ALL_DIRS=$(find . -maxdepth 1 -mindepth 1 -type d ! -name '.git' -exec basename {} \;)
+          # FIX: Dieser Befehl ignoriert jetzt explizit den .github-Ordner
+          ALL_DIRS=$(find . -maxdepth 1 -mindepth 1 -type d ! -name '.git' ! -name '.github' -exec basename {} \;)
           for dir in $ALL_DIRS; do
-            is_in_sync_list=false
-            for repo_in_list in $(echo "$REPOS_TO_SYNC" | sed "s/,/ /g"); do
-              if [ "$(basename "$repo_in_list")" == "$dir" ]; then
-                is_in_sync_list=true; break;
+              # Prüfe, ob das Verzeichnis in der aktuellen Sync-Liste ist
+              is_in_sync_list=false
+              for repo_in_list in $(echo "$REPOS_TO_SYNC" | sed "s/,/ /g"); do
+                if [ "$(basename "$repo_in_list")" == "$dir" ]; then
+                  is_in_sync_list=true
+                  break
+                fi
+              done
+              if [ "$is_in_sync_list" == "false" ]; then
+                echo "   - Deleting obsolete directory: $dir"
+                rm -rf "$dir"
               fi
-            done
-            if [ "$is_in_sync_list" == "false" ]; then
-              echo "   - Deleting obsolete directory: $dir"; rm -rf "$dir";
-            fi
           done
+
+          # == STEP 2: CLONE SUB-REPOS ==
           echo "-> Cloning sub-repos..."
-          for repo in $(echo "$REPOS_TO_SYNC" | sed "s/,/ /g"); do
+          git config --global url."https://x-access-token:${{ secrets.ACCESS_TOKEN }}@github.com/".insteadOf "https://github.com/"
+          for repo in $(echo "$REPOS_TO_SYNC" | sed 's/,/ /g'); do
             folder_name=$(basename $repo)
+            # Es ist sicherer, erst zu löschen, dann zu klonen
             rm -rf "$folder_name"
-            git clone --depth 1 "https://x-access-token:${{ secrets.ACCESS_TOKEN }}@github.com/$repo.git" "$folder_name" --quiet && rm -rf "$folder_name/.git"
+            git clone --depth 1 https://github.com/$repo.git "$folder_name" --quiet && rm -rf "$folder_name/.git"
           done
+
+          # == STEP 3: CREATE INTELLIGENT README ==
+          sudo apt-get update -qq && sudo apt-get install -y tree >/dev/null
+          echo "# 🤖 MonoMono Fusions-Repo" > README.md
+          echo "" >> README.md
+          echo "## 🗺️ Projekt-Map" >> README.md
+          echo "### 🧩 Komponenten" >> README.md
+          for repo in $(echo "$REPOS_TO_SYNC" | sed 's/,/ /g'); do
+            echo "- **[$(basename $repo)](./$(basename $repo))** (Original: [$repo](https://github.com/$repo))" >> README.md
+          done
+          echo "" >> README.md
+          echo "### 🌳 Verzeichnisstruktur" >> README.md
+          echo "```" >> README.md
+          tree -L 2 -I 'README.md' >> README.md
+          echo "```" >> README.md
+          echo "" >> README.md
+          echo "> Letzte Aktualisierung: $(date)" >> README.md
+
+          # == STEP 4: COMMIT AND PUSH ==
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add .
+          if ! git diff-index --quiet HEAD; then
+            git commit -m "feat: Sync sub-repos and update project map"
+            git push --force
+          else
+            echo "No new changes found."
+          fi
